@@ -1,0 +1,60 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { Product } from '../types/product';
+
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+interface CartState {
+  items: CartItem[];
+  addItem: (product: Product) => void;
+  removeItem: (productId: string) => void;
+  clearCart: () => void;
+  getCartTotal: () => number;
+}
+
+export const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      
+      addItem: (product) => {
+        set((state) => {
+          const existingItem = state.items.find((item) => item.product.id === product.id);
+          
+          if (existingItem) {
+            return {
+              items: state.items.map((item) =>
+                item.product.id === product.id
+                  ? { ...item, quantity: item.quantity + 1 }
+                  : item
+              ),
+            };
+          }
+          
+          return { items: [...state.items, { product, quantity: 1 }] };
+        });
+      },
+      
+      removeItem: (productId) => {
+        set((state) => ({
+          items: state.items.filter((item) => item.product.id !== productId),
+        }));
+      },
+      
+      clearCart: () => {
+        set({ items: [] });
+      },
+      
+      getCartTotal: () => {
+        const { items } = get();
+        return items.reduce((total, item) => total + item.product.pricePerDay * item.quantity, 0);
+      },
+    }),
+    {
+      name: 'pegue-e-monte-cart', // Persists cart state in localStorage automatically
+    }
+  )
+);

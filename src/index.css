@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Custom Pegue-e-Monte Styles */
+@theme {
+  --color-emerald-600: #059669;
+}
