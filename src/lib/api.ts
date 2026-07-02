@@ -1,8 +1,11 @@
 import axios, { type AxiosInstance } from 'axios';
 
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
+const baseURL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/$/, '')}/api`;
+
 // Create axios instance with base URL and interceptors
 const apiClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3333/api',
+  baseURL,
   timeout: 10000,
 });
 
