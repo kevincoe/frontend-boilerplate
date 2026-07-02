@@ -12,13 +12,13 @@ export const Header: React.FC = () => {
           
           <nav className="hidden md:flex space-x-8">
             <Link to="/" className="text-gray-700 hover:text-emerald-600 transition-colors">Início</Link>
-            <Link to="/products" className="text-gray-700 hover:text-emerald-600 transition-colors">Produtos</Link>
+            <Link to="/equipment" className="text-gray-700 hover:text-emerald-600 transition-colors">Produtos</Link>
             <Link to="/quote" className="text-gray-700 hover:text-emerald-600 transition-colors">Cotação</Link>
             <Link to="/orders" className="text-gray-700 hover:text-emerald-600 transition-colors">Meus Pedidos</Link>
           </nav>
 
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-gray-700 hover:text-emerald-600 transition-colors">
+            <button aria-label="Menu do Usuário" className="p-2 text-gray-700 hover:text-emerald-600 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>

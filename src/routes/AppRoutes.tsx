@@ -2,13 +2,11 @@ import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 
 // Import all pages with correct export patterns
-import { HomePage } from '../pages/HomePage';
 import { ProductsPage } from '../pages/ProductsPage';
 import { QuotePage } from '../pages/QuotePage';
 import { OrdersPage } from '../pages/OrdersPage';
-import { CatalogPage } from '../pages/CatalogPage';
-import { CartPage } from '../pages/CartPage';
 import { AdminDashboard } from '../pages/AdminDashboard';
+import { CreateEquipmentPage } from '../pages/CreateEquipmentPage';
 
 // Import layout components
 import { Header } from '../components/Header';
@@ -17,7 +15,7 @@ import { Footer } from '../components/Footer';
 // Layout component with header and footer
 const Layout: React.FC = () => (
   <>
-    <Header />
+    <Header /> {/* TODO: Atualizar links de navegação para o contexto de CRM interno */}
     <main className="min-h-screen">
       <Outlet />
     </main>
@@ -43,32 +41,28 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <AdminDashboard />,
       },
       {
-        path: 'products',
-        element: <ProductsPage />,
+        path: 'equipment',
+        element: <ProductsPage />, // Lembre-se de renomear o arquivo para EquipmentPage.tsx
+      },
+      {
+        path: 'equipment/new',
+        element: <CreateEquipmentPage />,
       },
       {
         path: 'quote',
         element: <QuotePage />,
       },
       {
-        path: 'orders',
+        path: 'orders', // Gerenciamento de Pedidos/Aluguéis
         element: <OrdersPage />,
       },
       {
-        path: 'catalog',
-        element: <CatalogPage />,
-      },
-      {
-        path: 'cart',
-        element: <CartPage />,
-      },
-      {
-        path: 'admin',
-        element: <AdminDashboard />,
-      },
+        path: 'customers', // Futura rota para gerenciamento de clientes
+        // element: <CustomersPage />,
+      }
     ],
   },
 ]);

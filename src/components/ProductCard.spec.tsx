@@ -8,9 +8,11 @@ const mockProduct: Product = {
   name: 'Cadeira Gamer',
   description: 'Cadeira ergonômica para desenvolvedores.',
   pricePerDay: 45.0,
-  imageUrl: 'https://via.placeholder.com/150',
+  imageUrl: 'https://example.com/image.jpg',
   isAvailable: true,
-  category: 'Móveis', // Adding required category field
+  category: 'Test Category',
+  totalStock: 10,
+  availableStock: 5,
 };
 
 describe('ProductCard', () => {

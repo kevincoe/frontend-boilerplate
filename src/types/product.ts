@@ -8,6 +8,8 @@ export const ProductSchema = z.object({
   imageUrl: z.string().catch(''),
   isAvailable: z.boolean().default(true),
   category: z.string().default(''), // Adding category field as expected by the UI
+  totalStock: z.number().nonnegative().default(0),
+  availableStock: z.number().nonnegative().default(0),
 });
 
 export type Product = z.infer<typeof ProductSchema>;

@@ -9,18 +9,33 @@ interface QuoteFormProps {
 
 export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }) => {
   const [formData, setFormData] = useState({
-    customerId: '',
-    assetIds: [] as string[],
+    customer: {
+      name: '',
+      email: '',
+      phone: '',
+      document: ''
+    },
+    items: [] as { productId: string; quantity: number }[],
     pickUpDate: '',
     returnDate: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (['name', 'email', 'phone', 'document'].includes(name)) {
+      setFormData(prev => ({
+        ...prev,
+        customer: {
+          ...prev.customer,
+          [name]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,19 +54,66 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="customerId" className="block text-sm font-medium text-gray-700 mb-1">
-            ID do Cliente
-          </label>
-          <input
-            type="text"
-            id="customerId"
-            name="customerId"
-            value={formData.customerId}
-            onChange={handleInputChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Nome Completo
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.customer.name}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.customer.email}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              Telefone
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.customer.phone}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="document" className="block text-sm font-medium text-gray-700 mb-1">
+              Documento (CPF/CNPJ)
+            </label>
+            <input
+              type="text"
+              id="document"
+              name="document"
+              value={formData.customer.document}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
         </div>
 
         <div>

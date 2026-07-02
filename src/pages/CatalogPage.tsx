@@ -1,10 +1,10 @@
 import React from 'react';
-import { useProducts } from '../hooks/useProducts';
+import { useEquipment } from '../hooks/useProducts';
 import { ProductCard } from '../components/ProductCard';
 import { useCartStore } from '../store/useCartStore';
 
 export const CatalogPage: React.FC = () => {
-  const { products, isLoading, error } = useProducts();
+  const { products, isLoading, error } = useEquipment();
   const addItem = useCartStore((state) => state.addItem);
 
   if (isLoading) return <div className="p-8 text-center">Carregando catálogo...</div>;
@@ -17,7 +17,7 @@ export const CatalogPage: React.FC = () => {
         {products.length === 0 ? (
           <p className="text-gray-500">Nenhum produto encontrado.</p>
         ) : (
-          products.map(product => (
+          products.map((product) => (
             <ProductCard key={product.id} product={product} onAddToCart={addItem} />
           ))
         )}
