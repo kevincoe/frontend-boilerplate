@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts';
 import { ProductCard } from '../components/ProductCard';
 import { useCartStore } from '../store/useCartStore';
 
-const CatalogPage: React.FC = () => {
+export const CatalogPage: React.FC = () => {
   const { products, isLoading, error } = useProducts();
   const addItem = useCartStore((state) => state.addItem);
 

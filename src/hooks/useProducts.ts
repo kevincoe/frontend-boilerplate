@@ -1,13 +1,25 @@
 import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import { z } from 'zod';
-import { api } from '../lib/api';
-import { Product, ProductSchema } from '../types/product';
+import api from '../lib/api';
+import { type Product, ProductSchema } from '../types/product';
 
-const ProductsResponseSchema = z.array(ProductSchema);
+// Atualizado para refletir o contrato de paginação do backend
+const ProductsResponseSchema = z.object({
+  data: z.array(ProductSchema),
+  total: z.number(),
+  page: z.number(),
+  limit: z.number(),
+});
+
+interface ApiErrorResponse {
+  status: string;
+  message: string;
+}
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchProducts = useCallback(async () => {
@@ -15,15 +27,30 @@ export function useProducts() {
     setError(null);
 
     try {
-      const response = await api.get('/products');
+      // O backend agora espera paginação. Default: page=1, limit=10
+      const response = await api.get('/products', {
+        params: { page: 1, limit: 10 }
+      });
       
       // Parse and validate the response data at runtime
       const validatedData = ProductsResponseSchema.parse(response.data);
-      setProducts(validatedData);
+      setProducts(validatedData.data);
       
     } catch (err: unknown) {
+      // Log para auxiliar o time de desenvolvimento a identificar o erro real no console
+      console.error('[useProducts] Error fetching products:', err);
+
       if (err instanceof z.ZodError) {
-        setError(new Error('Invalid data format received from the server.'));
+        const fields = err.issues.map(i => i.path.join('.')).join(', ');
+        setError(new Error(`Erro de contrato nos campos: ${fields}`));
+      } else if (axios.isAxiosError<ApiErrorResponse>(err)) {
+        if (err.response?.status === 404) {
+          setError(new Error(`Endpoint não encontrado (404). Verifique se a rota '/api/products' está registrada no backend.`));
+        } else {
+          // Alinhamento com AppError do backend: { status, message }
+          const apiMessage = err.response?.data?.message ?? err.message;
+          setError(new Error(apiMessage));
+        }
       } else if (err instanceof Error) {
         setError(err);
       } else {
@@ -35,7 +62,19 @@ export function useProducts() {
   }, []);
 
   useEffect(() => {
-    fetchProducts();
+    let isMounted = true;
+
+    // Defer execution to avoid calling setState synchronously within the effect body.
+    // This prevents cascading renders and satisfies the react-hooks/set-state-in-effect rule.
+    queueMicrotask(() => {
+      if (isMounted) {
+        void fetchProducts();
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, [fetchProducts]);
 
   return { products, isLoading, error, refetch: fetchProducts };
