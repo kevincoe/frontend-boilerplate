@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { QuoteForm } from '../components/QuoteForm';
 import { useCartStore } from '../store/useCartStore';
 import { createQuote } from '../services/ordersService';
+import axios from 'axios';
 
 export const QuotePage: React.FC = () => {
   const { items, clearCart, removeItem, updateQuantity } = useCartStore();
@@ -30,8 +31,9 @@ export const QuotePage: React.FC = () => {
       await createQuote(payload);
       clearCart();
       navigate('/orders');
-    } catch (err: any) {
-      setError(err?.response?.data?.error || 'Erro ao criar cotação');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? err.response?.data?.error : null;
+      setError(msg || 'Erro ao criar cotação');
     } finally {
       setLoading(false);
     }

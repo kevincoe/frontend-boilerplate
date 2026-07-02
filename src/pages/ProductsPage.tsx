@@ -4,7 +4,8 @@ import { Search, Plus, Filter, LayoutGrid, PackageOpen, X, AlertTriangle } from 
 import { useEquipment } from '../hooks/useProducts';
 import { ProductList } from '../components/ProductList';
 import { useCartStore } from '../store/useCartStore';
-import { PRODUCT_CATEGORIES } from '../types';
+import { PRODUCT_CATEGORIES, type ProductCategory } from '../types';
+import axios from 'axios';
 import { updateProduct, updateProductStock, deleteProduct } from '../services/productsService';
 import type { Product } from '../types/index';
 
@@ -46,8 +47,9 @@ export const ProductsPage: React.FC = () => {
       await updateProduct(editingProduct.id, editFormData);
       setEditingProduct(null);
       refetch({ search: searchTerm, category: selectedCategory });
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Erro ao atualizar produto');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      alert(msg || 'Erro ao atualizar produto');
     }
   };
 
@@ -58,8 +60,9 @@ export const ProductsPage: React.FC = () => {
       await updateProductStock(stockProduct.id, newStock);
       setStockProduct(null);
       refetch({ search: searchTerm, category: selectedCategory });
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Erro ao ajustar estoque');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      alert(msg || 'Erro ao ajustar estoque');
     }
   };
 
@@ -69,8 +72,9 @@ export const ProductsPage: React.FC = () => {
       await deleteProduct(deletingProduct.id);
       setDeletingProduct(null);
       refetch({ search: searchTerm, category: selectedCategory });
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Erro ao excluir produto');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      alert(msg || 'Erro ao excluir produto');
     }
   };
 
@@ -191,7 +195,7 @@ export const ProductsPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                    <select required value={editFormData.category || ''} onChange={e => setEditFormData({...editFormData, category: e.target.value as any})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white">
+                    <select required value={editFormData.category || ''} onChange={e => setEditFormData({...editFormData, category: e.target.value as ProductCategory})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white">
                       {PRODUCT_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>

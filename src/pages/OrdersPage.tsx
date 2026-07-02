@@ -3,6 +3,7 @@ import { OrderManagement } from '../components/OrderManagement';
 import { fetchOrders, confirmOrder, updateOrder, deleteOrder, finishOrder } from '../services/ordersService';
 import type { OrderResponse } from '../types/index';
 import { X, AlertTriangle } from 'lucide-react';
+import axios from 'axios';
 
 export const OrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<OrderResponse[]>([]);
@@ -34,6 +35,7 @@ export const OrdersPage: React.FC = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOrders();
   }, []);
 
@@ -42,9 +44,9 @@ export const OrdersPage: React.FC = () => {
       setError(undefined);
       await confirmOrder(orderId, { paymentAmount: amount });
       await loadOrders();
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Erro ao confirmar pedido';
-      setError(errorMessage);
+    } catch (err) {
+      const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error : null;
+      setError(errorMessage || 'Erro ao confirmar pedido');
     }
   };
 
@@ -69,8 +71,9 @@ export const OrdersPage: React.FC = () => {
       });
       setEditingOrder(null);
       await loadOrders();
-    } catch (err: any) {
-      alert(err.response?.data?.message || err.response?.data?.error || 'Erro ao editar pedido');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? (err.response?.data?.message || err.response?.data?.error) : null;
+      alert(msg || 'Erro ao editar pedido');
     }
   };
 
@@ -80,8 +83,9 @@ export const OrdersPage: React.FC = () => {
       await deleteOrder(deletingOrder.id);
       setDeletingOrder(null);
       await loadOrders();
-    } catch (err: any) {
-      alert(err.response?.data?.message || err.response?.data?.error || 'Erro ao excluir pedido');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? (err.response?.data?.message || err.response?.data?.error) : null;
+      alert(msg || 'Erro ao excluir pedido');
     }
   };
 
@@ -91,8 +95,9 @@ export const OrdersPage: React.FC = () => {
       await finishOrder(order.id);
       await loadOrders();
       alert('Locação finalizada com sucesso. Equipamentos retornados ao estoque.');
-    } catch (err: any) {
-      alert(err.response?.data?.message || err.response?.data?.error || 'Erro ao finalizar pedido');
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? (err.response?.data?.message || err.response?.data?.error) : null;
+      alert(msg || 'Erro ao finalizar pedido');
     }
   };
 

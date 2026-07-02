@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { Package, Tag, DollarSign, AlignLeft, Layers, ArrowLeft, Save } from 'lucide-react';
 import { createProduct } from '../services/productsService';
+import axios from 'axios';
 import { PRODUCT_CATEGORIES } from '../types';
 
 const EquipmentSchema = z.object({
@@ -34,9 +35,10 @@ export const CreateEquipmentPage: React.FC = () => {
       await createProduct({ ...data, imageUrl: '', description: data.description || '' });
       alert('Equipamento criado com sucesso!');
       navigate('/equipment');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Falha ao criar equipamento:', error);
-      alert(error.response?.data?.message || 'Ocorreu um erro ao criar o equipamento.');
+      const errorMessage = axios.isAxiosError(error) ? error.response?.data?.message : null;
+      alert(errorMessage || 'Ocorreu um erro ao criar o equipamento.');
     }
   };
 

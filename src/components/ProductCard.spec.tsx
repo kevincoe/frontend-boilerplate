@@ -15,13 +15,15 @@ const mockProduct: Product = {
   availableStock: 5,
 };
 
+import '@testing-library/jest-dom';
+
 describe('ProductCard', () => {
   it('should render product information correctly', () => {
     render(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('Cadeira Gamer')).toBeInTheDocument();
     expect(screen.getByText('Cadeira ergonômica para desenvolvedores.')).toBeInTheDocument();
-    expect(screen.getByText(/45,00/)).toBeInTheDocument();
+    expect(screen.getByText(/45\.00/)).toBeInTheDocument();
   });
 
   it('should call onAddToCart when clicked and product is available', () => {
@@ -37,11 +39,11 @@ describe('ProductCard', () => {
 
   it('should disable the button when product is not available', () => {
     const handleAddToCart = vi.fn();
-    const unavailableProduct = { ...mockProduct, isAvailable: false };
+    const unavailableProduct = { ...mockProduct, availableStock: 0 };
     
     render(<ProductCard product={unavailableProduct} onAddToCart={handleAddToCart} />);
 
-    const button = screen.getByRole('button', { name: /indisponível/i });
+    const button = screen.getByRole('button', { name: /esgotado/i });
     expect(button).toBeDisabled();
     
     fireEvent.click(button);
