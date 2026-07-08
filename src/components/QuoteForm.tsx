@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { CreateQuoteRequest } from '../types/index';
+import React, { useState } from "react";
+import type { CreateQuoteRequest } from "../types/index";
 
 interface QuoteFormProps {
   onSubmit: (data: CreateQuoteRequest) => void;
@@ -7,33 +7,37 @@ interface QuoteFormProps {
   error?: string;
 }
 
-export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }) => {
+export const QuoteForm: React.FC<QuoteFormProps> = ({
+  onSubmit,
+  loading,
+  error,
+}) => {
   const [formData, setFormData] = useState({
     customer: {
-      name: '',
-      email: '',
-      phone: '',
-      document: ''
+      name: "",
+      email: "",
+      phone: "",
+      document: "",
     },
     items: [] as { productId: string; quantity: number }[],
-    pickUpDate: '',
-    returnDate: ''
+    pickUpDate: "",
+    returnDate: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (['name', 'email', 'phone', 'document'].includes(name)) {
-      setFormData(prev => ({
+    if (["name", "email", "phone", "document"].includes(name)) {
+      setFormData((prev) => ({
         ...prev,
         customer: {
           ...prev.customer,
-          [name]: value
-        }
+          [name]: value,
+        },
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -45,8 +49,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Solicitar Cotação</h2>
-      
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        Solicitar Cotação
+      </h2>
+
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
           <p className="text-red-700">{error}</p>
@@ -56,7 +62,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Nome Completo
             </label>
             <input
@@ -71,7 +80,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -86,7 +98,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Telefone
             </label>
             <input
@@ -101,7 +116,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
           </div>
 
           <div>
-            <label htmlFor="document" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="document"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Documento (CPF/CNPJ)
             </label>
             <input
@@ -117,7 +135,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
         </div>
 
         <div>
-          <label htmlFor="pickUpDate" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="pickUpDate"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Data de Retirada
           </label>
           <input
@@ -132,7 +153,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
         </div>
 
         <div>
-          <label htmlFor="returnDate" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="returnDate"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Data de Devolução
           </label>
           <input
@@ -152,7 +176,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, loading, error }
             disabled={loading}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-50"
           >
-            {loading ? 'Processando...' : 'Solicitar Cotação'}
+            {loading ? "Processando..." : "Solicitar Cotação"}
           </button>
         </div>
       </form>

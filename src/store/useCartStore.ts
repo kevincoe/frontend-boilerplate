@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { Product } from '../types/product';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { Product } from "../types/product";
 
 interface CartItem {
   product: Product;
@@ -20,57 +20,60 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      
+
       addItem: (product) => {
         set((state) => {
-          const existingItem = state.items.find((item) => item.product.id === product.id);
-          
+          const existingItem = state.items.find(
+            (item) => item.product.id === product.id,
+          );
+
           if (existingItem) {
             return {
               items: state.items.map((item) =>
                 item.product.id === product.id
                   ? { ...item, quantity: item.quantity + 1 }
-                  : item
+                  : item,
               ),
             };
           }
-          
+
           return { items: [...state.items, { product, quantity: 1 }] };
         });
       },
-      
+
       removeItem: (productId) => {
         set((state) => ({
           items: state.items.filter((item) => item.product.id !== productId),
         }));
       },
-      
+
       updateQuantity: (productId, quantity) => {
         if (quantity <= 0) {
           get().removeItem(productId);
           return;
         }
-        
+
         set((state) => ({
           items: state.items.map((item) =>
-            item.product.id === productId
-              ? { ...item, quantity }
-              : item
+            item.product.id === productId ? { ...item, quantity } : item,
           ),
         }));
       },
-      
+
       clearCart: () => {
         set({ items: [] });
       },
-      
+
       getCartTotal: () => {
         const { items } = get();
-        return items.reduce((total, item) => total + item.product.pricePerDay * item.quantity, 0);
+        return items.reduce(
+          (total, item) => total + item.product.pricePerDay * item.quantity,
+          0,
+        );
       },
     }),
     {
-      name: 'pegue-e-monte-cart', // Persists cart state in localStorage automatically
-    }
-  )
+      name: "pegue-e-monte-cart", // Persists cart state in localStorage automatically
+    },
+  ),
 );

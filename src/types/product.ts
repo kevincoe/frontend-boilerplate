@@ -1,13 +1,13 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const ProductSchema = z.object({
   id: z.string(), // Relaxado de .uuid() para aceitar IDs comuns do backend
   name: z.string().min(1, "Name is required"),
-  description: z.string().default(''),
+  description: z.string().default(""),
   pricePerDay: z.number().nonnegative().catch(0),
-  imageUrl: z.string().catch(''),
+  imageUrl: z.string().catch(""),
   isAvailable: z.boolean().default(true),
-  category: z.string().default(''), // Adding category field as expected by the UI
+  category: z.string().default(""), // Adding category field as expected by the UI
   totalStock: z.number().nonnegative().default(0),
   availableStock: z.number().nonnegative().default(0),
 });

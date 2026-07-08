@@ -1,7 +1,9 @@
-import axios, { type AxiosInstance } from 'axios';
+import axios, { type AxiosInstance } from "axios";
 
-const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
-const baseURL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/$/, '')}/api`;
+const rawApiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333/api";
+const baseURL = rawApiUrl.endsWith("/api")
+  ? rawApiUrl
+  : `${rawApiUrl.replace(/\/$/, "")}/api`;
 
 // Create axios instance with base URL and interceptors
 const apiClient: AxiosInstance = axios.create({
@@ -12,13 +14,13 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor for adding auth tokens
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptor for error handling
@@ -27,11 +29,11 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Handle unauthorized access
-      localStorage.removeItem('authToken');
-      window.location.href = '/login';
+      localStorage.removeItem("authToken");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;

@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const OrderStateEnum = z.enum([
-  'DRAFT',
-  'AWAITING_DEPOSIT',
-  'RESERVED',
-  'CONFIRMED',
-  'CANCELLED',
+  "DRAFT",
+  "AWAITING_DEPOSIT",
+  "RESERVED",
+  "CONFIRMED",
+  "CANCELLED",
 ]);
 
 export const OrderSchema = z.object({

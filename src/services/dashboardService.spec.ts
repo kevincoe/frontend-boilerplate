@@ -1,20 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import apiClient from '../lib/api';
-import { fetchDashboardStats } from './dashboardService';
-import type { DashboardStats } from '../types';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import apiClient from "../lib/api";
+import { fetchDashboardStats } from "./dashboardService";
+import type { DashboardStats } from "../types";
 
-vi.mock('../lib/api', () => ({
+vi.mock("../lib/api", () => ({
   default: {
     get: vi.fn(),
   },
 }));
 
-describe('dashboardService', () => {
+describe("dashboardService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should fetch dashboard stats', async () => {
+  it("should fetch dashboard stats", async () => {
     const mockStats: DashboardStats = {
       totalEquipment: 100,
       rentedEquipment: 50,
@@ -28,7 +28,7 @@ describe('dashboardService', () => {
 
     const result = await fetchDashboardStats();
 
-    expect(apiClient.get).toHaveBeenCalledWith('/dashboard/stats');
+    expect(apiClient.get).toHaveBeenCalledWith("/dashboard/stats");
     expect(result).toEqual(mockStats);
   });
 });

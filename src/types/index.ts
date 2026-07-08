@@ -32,15 +32,15 @@ export interface QuoteResponse {
 }
 
 export const PRODUCT_CATEGORIES = [
-  'MOVEIS',
-  'DECORACAO',
-  'LOUÇAS',
-  'TECIDOS',
-  'ELETRONICOS',
-  'GERAL'
+  "MOVEIS",
+  "DECORACAO",
+  "LOUÇAS",
+  "TECIDOS",
+  "ELETRONICOS",
+  "GERAL",
 ] as const;
 
-export type ProductCategory = typeof PRODUCT_CATEGORIES[number];
+export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
 export interface ConfirmOrderRequest {
   paymentAmount: number;
@@ -84,6 +84,13 @@ export interface OrderResponse {
   }[];
   pickUpDate: string;
   returnDate: string;
-  state: 'DRAFT' | 'AWAITING_DEPOSIT' | 'RESERVED' | 'IN_PROGRESS' | 'PENDING_INSPECTION' | 'COMPLETED' | 'COMPLETED_WITH_DAMAGES';
+  state:
+    | "DRAFT"
+    | "AWAITING_DEPOSIT"
+    | "RESERVED"
+    | "IN_PROGRESS"
+    | "PENDING_INSPECTION"
+    | "COMPLETED"
+    | "COMPLETED_WITH_DAMAGES";
   totalAmount: number;
 }
