@@ -15,7 +15,7 @@ const KitSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
-  price: z.number(),
+  price: z.coerce.number(),
   isFavorited: z.boolean(),
   items: z.array(KitItemSchema),
 });
