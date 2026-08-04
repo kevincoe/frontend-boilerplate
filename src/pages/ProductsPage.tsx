@@ -11,8 +11,10 @@ import {
 } from "lucide-react";
 import { useEquipment } from "../hooks/useProducts";
 import { ProductList } from "../components/ProductList";
+import { KitList } from "../components/KitList";
 import { useCartStore } from "../store/useCartStore";
 import { PRODUCT_CATEGORIES, type ProductCategory } from "../types";
+import { useKits } from "../hooks/useKits";
 import axios from "axios";
 import {
   updateProduct,
@@ -27,7 +29,16 @@ export const ProductsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { products, isLoading, error, refetch } = useEquipment();
+  const {
+    kits,
+    isLoading: isKitsLoading,
+    error: kitsError,
+    toggleFavorite,
+  } = useKits();
   const addItem = useCartStore((state) => state.addItem);
+
+  // Tab State
+  const [activeTab, setActiveTab] = useState<"equipment" | "kits">("equipment");
 
   // Modal States
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -118,87 +129,137 @@ export const ProductsPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Toolbar: Search and Filters */}
-        <div className="mb-8 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <form onSubmit={handleSearch} className="flex-1 flex gap-2">
-              <div className="relative flex-1">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Buscar por nome ou categoria..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
-                />
+        {/* Tabs */}
+        <div className="flex space-x-4 mb-6 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab("equipment")}
+            className={`pb-4 px-2 font-medium text-sm transition-colors border-b-2 ${
+              activeTab === "equipment"
+                ? "border-emerald-600 text-emerald-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            }`}
+          >
+            Equipamentos
+          </button>
+          <button
+            onClick={() => setActiveTab("kits")}
+            className={`pb-4 px-2 font-medium text-sm transition-colors border-b-2 ${
+              activeTab === "kits"
+                ? "border-emerald-600 text-emerald-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            }`}
+          >
+            Kits & Composições
+          </button>
+        </div>
+
+        {activeTab === "equipment" ? (
+          <>
+            {/* Toolbar: Search and Filters */}
+            <div className="mb-8 space-y-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <form onSubmit={handleSearch} className="flex-1 flex gap-2">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Search className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Buscar por nome ou categoria..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
+                  >
+                    Buscar
+                  </button>
+                </form>
               </div>
-              <button
-                type="submit"
-                className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
-              >
-                Buscar
-              </button>
-            </form>
-          </div>
 
-          {/* Category Pills */}
-          <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-hide">
-            <Filter className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" />
-            <button
-              onClick={() => setSelectedCategory("")}
-              className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                selectedCategory === ""
-                  ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                  : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-              }`}
-            >
-              Todas as Categorias
-            </button>
-            {PRODUCT_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === cat
-                    ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                    : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
+              {/* Category Pills */}
+              <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+                <Filter className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" />
+                <button
+                  onClick={() => setSelectedCategory("")}
+                  className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    selectedCategory === ""
+                      ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                      : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  Todas as Categorias
+                </button>
+                {PRODUCT_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      selectedCategory === cat
+                        ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                        : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        {/* Products Grid Header */}
-        <div className="flex justify-between items-center mb-4 px-2">
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-            <LayoutGrid className="w-5 h-5 mr-2 text-gray-400" />
-            Itens no Acervo
-          </h2>
-          <span className="text-sm text-gray-500">
-            {products.length} itens listados nesta página
-          </span>
-        </div>
+            {/* Products Grid Header */}
+            <div className="flex justify-between items-center mb-4 px-2">
+              <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+                <LayoutGrid className="w-5 h-5 mr-2 text-gray-400" />
+                Itens no Acervo
+              </h2>
+              <span className="text-sm text-gray-500">
+                {products.length} itens listados nesta página
+              </span>
+            </div>
 
-        {/* Products List */}
-        <ProductList
-          products={products}
-          loading={isLoading}
-          error={error ? error.message || String(error) : undefined}
-          onAddToCart={handleAddToCart}
-          onEdit={(product) => {
-            setEditingProduct(product);
-            setEditFormData(product);
-          }}
-          onAdjustStock={(product) => {
-            setStockProduct(product);
-            setNewStock(product.totalStock);
-          }}
-          onDelete={(product) => setDeletingProduct(product)}
-        />
+            {/* Products List */}
+            <ProductList
+              products={products}
+              loading={isLoading}
+              error={error ? error.message || String(error) : undefined}
+              onAddToCart={handleAddToCart}
+              onEdit={(product) => {
+                setEditingProduct(product);
+                setEditFormData(product);
+              }}
+              onAdjustStock={(product) => {
+                setStockProduct(product);
+                setNewStock(product.totalStock);
+              }}
+              onDelete={(product) => setDeletingProduct(product)}
+            />
+          </>
+        ) : (
+          <>
+            {/* Kits Grid Header */}
+            <div className="flex justify-between items-center mb-4 px-2">
+              <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+                <PackageOpen className="w-5 h-5 mr-2 text-gray-400" />
+                Meus Kits
+              </h2>
+              <span className="text-sm text-gray-500">
+                {kits.length} kits cadastrados
+              </span>
+            </div>
+
+            <KitList
+              kits={kits}
+              loading={isKitsLoading}
+              error={
+                kitsError ? kitsError.message || String(kitsError) : undefined
+              }
+              onToggleFavorite={toggleFavorite}
+            />
+          </>
+        )}
 
         {/* Modal: Edit Product */}
         {editingProduct && (

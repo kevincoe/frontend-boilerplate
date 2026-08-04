@@ -341,6 +341,16 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({
                             R$ {Number(order.totalAmount).toFixed(2)}
                           </span>
                         </div>
+                        {order.state === "DRAFT" && (
+                          <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-gray-100">
+                            <span className="text-gray-600 font-medium">
+                              Sinal Necessário (50%)
+                            </span>
+                            <span className="font-bold text-gray-900 flex items-center">
+                              R$ {(Number(order.totalAmount) / 2).toFixed(2)}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {order.state === "DRAFT" && (
@@ -349,7 +359,7 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({
                             e.stopPropagation();
                             handleConfirmOrder(
                               order.id,
-                              Number(order.totalAmount),
+                              Number(order.totalAmount) / 2,
                             );
                           }}
                           disabled={confirmingOrder === order.id}

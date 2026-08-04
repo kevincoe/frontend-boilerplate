@@ -85,6 +85,6 @@ describe("OrderManagement component", () => {
 
     fireEvent.click(confirmButton);
     expect(mockOnConfirm).toHaveBeenCalledTimes(1);
-    expect(mockOnConfirm).toHaveBeenCalledWith("order-1", 350.5);
+    expect(mockOnConfirm).toHaveBeenCalledWith("order-1", 350.5 / 2);
   });
 });

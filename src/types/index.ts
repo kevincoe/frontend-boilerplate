@@ -94,3 +94,26 @@ export interface OrderResponse {
     | "COMPLETED_WITH_DAMAGES";
   totalAmount: number;
 }
+
+export interface KitItem {
+  productBaseId: string;
+  quantity: number;
+  product?: Product;
+}
+
+export interface Kit {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  isFavorited: boolean;
+  items: KitItem[];
+}
+
+export interface CreateKitRequest {
+  name: string;
+  description: string;
+  price: number;
+  isFavorited: boolean;
+  items: Omit<KitItem, "product">[];
+}

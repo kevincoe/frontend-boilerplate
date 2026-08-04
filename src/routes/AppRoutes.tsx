@@ -1,12 +1,26 @@
 import React, { Suspense } from "react";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
-// Import all pages with correct export patterns
-import { ProductsPage } from "../pages/ProductsPage";
-import { QuotePage } from "../pages/QuotePage";
-import { OrdersPage } from "../pages/OrdersPage";
-import { AdminDashboard } from "../pages/AdminDashboard";
-import { CreateEquipmentPage } from "../pages/CreateEquipmentPage";
+// Import all pages with lazy loading for code-splitting
+const ProductsPage = React.lazy(() =>
+  import("../pages/ProductsPage").then((m) => ({ default: m.ProductsPage })),
+);
+const QuotePage = React.lazy(() =>
+  import("../pages/QuotePage").then((m) => ({ default: m.QuotePage })),
+);
+const OrdersPage = React.lazy(() =>
+  import("../pages/OrdersPage").then((m) => ({ default: m.OrdersPage })),
+);
+const AdminDashboard = React.lazy(() =>
+  import("../pages/AdminDashboard").then((m) => ({
+    default: m.AdminDashboard,
+  })),
+);
+const CreateEquipmentPage = React.lazy(() =>
+  import("../pages/CreateEquipmentPage").then((m) => ({
+    default: m.CreateEquipmentPage,
+  })),
+);
 
 // Import layout components
 import { Header } from "../components/Header";
