@@ -99,6 +99,7 @@ export interface KitItem {
   productBaseId: string;
   quantity: number;
   product?: Product;
+  productBase?: Product;
 }
 
 export interface Kit {

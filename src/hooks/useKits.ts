@@ -5,11 +5,14 @@ import api from "../lib/api";
 import type { Kit, CreateKitRequest } from "../types/index";
 import { ProductSchema } from "../types/product";
 
-const KitItemSchema = z.object({
-  productBaseId: z.string(),
-  quantity: z.number(),
-  product: ProductSchema.optional(),
-});
+const KitItemSchema = z
+  .object({
+    productBaseId: z.string(),
+    quantity: z.number(),
+    product: ProductSchema.optional(),
+    productBase: ProductSchema.optional(),
+  })
+  .passthrough();
 
 const KitSchema = z.object({
   id: z.string(),

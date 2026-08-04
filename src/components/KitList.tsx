@@ -98,7 +98,9 @@ export const KitList: React.FC<KitListProps> = ({
                     className="text-sm text-gray-700 flex justify-between"
                   >
                     <span className="truncate mr-2">
-                      {item.product?.name || item.productBaseId}
+                      {item.product?.name ||
+                        item.productBase?.name ||
+                        item.productBaseId}
                     </span>
                     <span className="font-medium text-gray-900">
                       x{item.quantity}

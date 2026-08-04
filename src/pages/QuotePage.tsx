@@ -65,9 +65,10 @@ export const QuotePage: React.FC = () => {
   const onImportKit = (kit: import("../types/index").Kit) => {
     clearCart();
     kit.items.forEach((item) => {
-      if (item.product) {
-        useCartStore.getState().addItem(item.product);
-        useCartStore.getState().updateQuantity(item.product.id, item.quantity);
+      const product = item.product || item.productBase;
+      if (product) {
+        useCartStore.getState().addItem(product);
+        useCartStore.getState().updateQuantity(product.id, item.quantity);
       }
     });
     setIsImportKitModalOpen(false);
